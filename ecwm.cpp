@@ -8,17 +8,15 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 
-#include "client.h"
-
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 typedef struct Client Client;
 typedef struct Desktop Desktop;
 
+static void sigchld(int);
+
 static void setup(void);
 static void start(void);
-
-static void sigchld(int);
 
 static void keypress(XEvent *);
 static void maprequest(XEvent *);
@@ -101,11 +99,6 @@ maprequest(XEvent * e)
     printf("maprequest\n");
     printf("\twindow: %ld\n", ev->window);
 
-    c = windowtoclient(ev->window);
-
-    if (!c) {
-         manageclient(ev->window);
-    }
 }
 
 void 
@@ -119,12 +112,6 @@ destroynotify(XEvent * e)
     printf("destroynotify\n");
     printf("\twindow: %ld\n", ev->window);
     printf("\tevent: %ld\n", ev->event);
-
-    c = windowtoclient(ev->window);
-
-    if (c) {
-        unmanageclient(c);
-    }
 }
 
 void 
@@ -140,6 +127,7 @@ configurenotify(XEvent * e)
     printf("\tx, y, w, h: %d %d %d %d\n", ev->x, ev->y, ev->width, ev->height);
     printf("\tbw: %d\n", ev->border_width);
     printf("\tabove?: %d\n", ev->above);
+    printf("\toverride?: %d\n", ev->override_redirect);
 }
 
 void 
@@ -148,6 +136,7 @@ configurerequest(XEvent * e)
     Client * c;
     XConfigureRequestEvent * ev;
     XWindowChanges wc;
+    unsigned long attr;
 
     ev = &e->xconfigurerequest;
 
@@ -159,21 +148,15 @@ configurerequest(XEvent * e)
     printf("\tdetail: %d\n", ev->detail);
     printf("\tsendevent: %ld\n", ev->send_event);
 
+    attr = CWX | CWY | CWWidth | CWHeight;
+
     wc.x = ev->x;
     wc.y = ev->y;
     wc.width = ev->width;
     wc.height = ev->height;
-    wc.border_width = ev->border_width;
-    wc.sibling = ev->above;
-    wc.stack_mode = ev->detail;
 
-    c = windowtoclient(ev->window);
-
-    if (c) {
-        configureclient(c, wc);
-    } else {
-        XConfigureWindow(dpy, ev->window, ev->value_mask, &wc);
-    }
+    // if window is not currently managed, just pipe the request directly 
+    XConfigureWindow(dpy, ev->window, attr, &wc);
 }
 
 int
