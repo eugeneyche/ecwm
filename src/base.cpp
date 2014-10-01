@@ -1,26 +1,32 @@
 #include "base.h"
 
-Base::Base(WindowManager * wm, Window window) :
+BaseWindow::BaseWindow(WindowManager * wm, Window window) :
         wm (wm), window (window)
 { }
 
-Base::~Base()
+BaseWindow::~BaseWindow()
 { }
 
+Window
+BaseWindow::getWindow()
+{
+	return window;
+}
+
 void
-Base::map()
+BaseWindow::map()
 {
     XMapWindow(wm->getDisplay(), window);
 }
 
 void
-Base::unmap()
+BaseWindow::unmap()
 {
     XUnmapWindow(wm->getDisplay(), window);
 }
 
 void
-Base::configure(unsigned long attrmask, XWindowChanges * wc)
+BaseWindow::configure(unsigned long attrmask, XWindowChanges * wc)
 {
 	int x, y, width, height;
 
@@ -41,7 +47,7 @@ Base::configure(unsigned long attrmask, XWindowChanges * wc)
 }
 
 void
-Base::move(int x, int y)
+BaseWindow::move(int x, int y)
 {
 	area.x = x;
 	area.y = y;
@@ -49,7 +55,7 @@ Base::move(int x, int y)
 }
 
 void
-Base::resize(int width, int height)
+BaseWindow::resize(int width, int height)
 {
 	area.width = width;
 	area.height = height;
@@ -57,7 +63,7 @@ Base::resize(int width, int height)
 }
 
 void
-Base::moveResize(int x, int y, int width, int height)
+BaseWindow::moveResize(int x, int y, int width, int height)
 {
 	area.x = x;
 	area.y = y;
@@ -67,7 +73,7 @@ Base::moveResize(int x, int y, int width, int height)
 }
 
 void
-Base::destroy()
+BaseWindow::destroy()
 {
     XDestroyWindow(wm->getDisplay(), window);
 }

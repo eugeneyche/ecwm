@@ -4,6 +4,7 @@
 #include <sys/wait.h>
 
 #include "manager.h"
+#include "base.h"
 
 void 
 sigchld(int unused)
@@ -32,6 +33,13 @@ WindowManager::WindowManager()
 
 WindowManager::~WindowManager()
 {
+	std::map<Window, BaseWindow *>::iterator i;
+	for (i = windowMap.begin(); i != windowMap.end(); i++) {
+		if (i->second) {
+			BaseWindow * toDelete = i->second;
+			delete toDelete;
+		}
+	}
     XCloseDisplay(display);
 }
 
@@ -69,14 +77,26 @@ WindowManager::start()
     }
 }
 
-Bool
-WindowManager::isRunning()
-{
-    return running;
-}
-
 Display *
 WindowManager::getDisplay()
 {
     return display;
+}
+
+void
+WindowManager::registerBaseWindow(BaseWindow * base)
+{
+	windowMap[base->getWindow()] = base;
+}
+
+void
+WindowManager::unregisterBaseWindow(BaseWindow * base)
+{
+	windowMap.erase(base->getWindow());
+}
+
+BaseWindow *
+WindowManager::windowToBaseWindow(Window window)
+{
+	return windowMap[window];
 }

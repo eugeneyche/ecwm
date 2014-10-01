@@ -3,7 +3,7 @@
 
 #include "base.h"
 
-class Frame : public Base
+class Frame : public BaseWindow
 {
 private:
     Client *        client;

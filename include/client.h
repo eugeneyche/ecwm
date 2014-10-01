@@ -3,7 +3,7 @@
 
 #include "base.h"
 
-class Client : public Base
+class Client : public BaseWindow
 {
 	friend Frame;
 

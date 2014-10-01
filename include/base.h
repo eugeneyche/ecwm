@@ -4,7 +4,7 @@
 #include "manager.h"
 #include "geometry.h"
 
-class Base
+class BaseWindow
 {
 protected:
     WindowManager * wm;
@@ -13,8 +13,10 @@ protected:
     Rectangle       area;
 
 public:
-    Base(WindowManager *, Window);
-    ~Base(void);
+    BaseWindow(WindowManager *, Window);
+    virtual ~BaseWindow(void);
+
+	Window getWindow(void);
 
     virtual void map(void);
     virtual void unmap(void);

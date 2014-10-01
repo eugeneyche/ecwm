@@ -1,7 +1,7 @@
 #include "client.h"
 
 Client::Client(WindowManager * wm, Window window) :
-        Base (wm, window), frame (NULL)
+        BaseWindow (wm, window), frame (NULL)
 { }
 
 Client::~Client()

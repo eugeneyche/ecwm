@@ -1,7 +1,7 @@
 #include "frame.h"
 
 Frame::Frame(WindowManager * wm, Client * client) :
-		Base (wm, None), client (client)
+		BaseWindow (wm, None), client (client)
 { }
 
 Frame::~Frame()
