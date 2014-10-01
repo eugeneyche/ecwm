@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "manager.h"
 
 void
@@ -9,9 +10,12 @@ WindowManager::keyPress(XEvent * ev)
 void
 WindowManager::mapRequest(XEvent * ev)
 {
-    
+    XMapRequestEvent * mev;
+
+	mev = &ev->xmaprequest;
+
     printf("> mapRequest\n");
-    printf("\twindow: %ld\n", ev->window);
+    printf("\twindow: %ld\n", mev->window);
 }
 
 void
@@ -19,7 +23,7 @@ WindowManager::destroyNotify(XEvent * ev)
 {
     XDestroyWindowEvent * dev;
 
-    dev = &ev->destroywindow;
+    dev = &ev->xdestroywindow;
 
     printf("> destroyNotify\n");
     printf("\twindow: %ld\n", dev->window);
@@ -35,7 +39,7 @@ WindowManager::configureNotify(XEvent * ev)
 
     printf("> configureNotify\n");
     printf("\twindow: %ld\n", cev->window);
-    printf("\tx, y, w, h: %d %d % %d\n",
+    printf("\tx, y, w, h: %d %d %d %d\n",
             cev->x,
             cev->y,
             cev->width,
@@ -55,7 +59,7 @@ WindowManager::configureRequest(XEvent * ev)
 
     cev = &ev->xconfigurerequest;
 
-    printf("> confgiureRequest\n");
+    printf("> configureRequest\n");
     printf("\twindow: %ld\n", cev->window);
     printf("\tx, y, width, height: %d %d %d %d\n",
             cev->x,
@@ -63,9 +67,9 @@ WindowManager::configureRequest(XEvent * ev)
             cev->width,
             cev->height);
     printf("\tbw: %d\n", cev->border_width);
-    printf("\tabove: %s\n", (ecv->above) ?
+    printf("\tabove: %s\n", (cev->above) ?
             "true" : "false");
-    printf("\tdetail %d\n" cev->detail);
-    printf("\tsendevent %s\n" (cev->send_event) ?
+    printf("\tdetail %d\n", cev->detail);
+    printf("\tsendevent %s\n", (cev->send_event) ?
             "true" : "false");
 }

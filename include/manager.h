@@ -3,6 +3,9 @@
 
 #include <X11/Xlib.h>
 
+class Client;
+class Frame;
+
 class WindowManager
 {
 private:
@@ -11,8 +14,6 @@ private:
     Display *       display;
     int             screen;
     Window          root;
-
-    void sigchld(void);
 
     void keyPress(XEvent *);
     void mapRequest(XEvent *);

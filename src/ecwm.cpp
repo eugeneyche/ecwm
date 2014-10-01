@@ -8,10 +8,11 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 
+#include "manager.h"
+
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 WindowManager wm;
-
 int
 main(int argc, char * argv [])
 {

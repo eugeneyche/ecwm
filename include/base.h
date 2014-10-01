@@ -2,6 +2,7 @@
 #define BASE_H_
 
 #include "manager.h"
+#include "geometry.h"
 
 class Base
 {

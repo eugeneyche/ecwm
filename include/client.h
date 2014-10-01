@@ -1,11 +1,12 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
-#include "manager.h"
-#include "geometry.h"
+#include "base.h"
 
 class Client : public Base
 {
+	friend Frame;
+
 private:
     Frame *         frame;
 
