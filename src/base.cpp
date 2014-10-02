@@ -2,7 +2,23 @@
 
 BaseWindow::BaseWindow(WindowManager * wm, Window window) :
         wm (wm), window (window)
-{ }
+{ 
+    if (window != None) {
+        XWindowAttributes wa;
+
+        XGetWindowAttributes(wm->getDisplay(), window, &wa);
+
+        area.x = wa.x;
+        area.y = wa.y;
+        area.width = wa.width;
+        area.height = wa.height;
+    } else {
+        area.x = 0;
+        area.y = 0;
+        area.width = 0;
+        area.height = 0;
+    }
+}
 
 BaseWindow::~BaseWindow()
 { }
@@ -11,6 +27,12 @@ Window
 BaseWindow::getWindow()
 {
 	return window;
+}
+
+Rectangle
+BaseWindow::getArea()
+{
+    return area;
 }
 
 void

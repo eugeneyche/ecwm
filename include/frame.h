@@ -9,21 +9,11 @@ private:
     Client *        client;
 
 	Rectangle frameAreaToClientArea(Rectangle);
+	Rectangle clientAreaToFrameArea(Rectangle);
 
 public:
     Frame(WindowManager *, Client *);
     ~Frame(void);
-
-    void map(void);
-    void unmap(void);
-    
-    void configure(unsigned long, XWindowChanges *);
-
-    void move(int, int);
-    void resize(int, int);
-    void moveResize(int, int, int, int);
-
-    void destroy(void);
 
 	void fitClient(void);
 };

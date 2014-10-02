@@ -17,6 +17,7 @@ public:
     virtual ~BaseWindow(void);
 
 	Window getWindow(void);
+    Rectangle getArea(void);
 
     virtual void map(void);
     virtual void unmap(void);

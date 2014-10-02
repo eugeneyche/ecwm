@@ -4,7 +4,7 @@
 #include <sys/wait.h>
 
 #include "manager.h"
-#include "base.h"
+#include "client.h"
 
 void 
 sigchld(int unused)
@@ -33,11 +33,10 @@ WindowManager::WindowManager()
 
 WindowManager::~WindowManager()
 {
-	std::map<Window, BaseWindow *>::iterator i;
-	for (i = windowMap.begin(); i != windowMap.end(); i++) {
+	std::map<Window, Client *>::iterator i;
+	for (i = clientMap.begin(); i != clientMap.end(); i++) {
 		if (i->second) {
-			BaseWindow * toDelete = i->second;
-			delete toDelete;
+			delete i->second;
 		}
 	}
     XCloseDisplay(display);
@@ -83,20 +82,32 @@ WindowManager::getDisplay()
     return display;
 }
 
-void
-WindowManager::registerBaseWindow(BaseWindow * base)
+Window
+WindowManager::getScreen()
 {
-	windowMap[base->getWindow()] = base;
+    return screen;
+}
+
+Window
+WindowManager::getRoot()
+{
+    return root;
 }
 
 void
-WindowManager::unregisterBaseWindow(BaseWindow * base)
+WindowManager::registerClient(Client * client)
 {
-	windowMap.erase(base->getWindow());
+	clientMap[client->getWindow()] = client;
 }
 
-BaseWindow *
-WindowManager::windowToBaseWindow(Window window)
+void
+WindowManager::unregisterClient(Client * client)
 {
-	return windowMap[window];
+	clientMap.erase(client->getWindow());
+}
+
+Client *
+WindowManager::windowToClient(Window window)
+{
+	return clientMap[window];
 }

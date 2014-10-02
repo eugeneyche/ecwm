@@ -4,7 +4,6 @@
 #include <X11/Xlib.h>
 #include <map>
 
-class BaseWindow;
 class Client;
 class Frame;
 
@@ -17,16 +16,13 @@ private:
     int             screen;
     Window          root;
 
-	std::map<Window, BaseWindow *> windowMap;
+	std::map<Window, Client *> clientMap;
 
     void keyPress(XEvent *);
     void mapRequest(XEvent *);
     void destroyNotify(XEvent *);
     void configureNotify(XEvent *);
     void configureRequest(XEvent *);
-
-	void registerBaseWindow(BaseWindow *);
-	void unregisterBaseWindow(BaseWindow *);
 
 public:
     WindowManager(void);
@@ -35,7 +31,12 @@ public:
     void start(void);
 
     Display * getDisplay(void);
-	BaseWindow * windowToBaseWindow(Window);
+    Window getScreen(void);
+    Window getRoot(void);
+	Client * windowToClient(Window);
+
+	void registerClient(Client *);
+	void unregisterClient(Client *);
 };
 
 #endif /* MANAGER_H_ */

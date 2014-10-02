@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "manager.h"
-#include "base.h"
 #include "client.h"
 
 void
@@ -13,26 +12,33 @@ void
 WindowManager::mapRequest(XEvent * ev)
 {
     XMapRequestEvent * mev;
-	BaseWindow * base;
+	Client * client;
+    XWindowAttributes wa;
 
 	mev = &ev->xmaprequest;
 
     printf("> mapRequest\n");
     printf("\twindow: %ld\n", mev->window);
 
-	base = windowToBaseWindow(mev->window);
-	if (!base) {
-		base = new Client(this, mev->window);
-		registerBaseWindow(base);
+    if (!XGetWindowAttributes(display, mev->window, &wa)) {
+        return;
+    }
+    if (wa.override_redirect) {
+        return;
+    }
+	client = windowToClient(mev->window);
+	if (!client) {
+		client = new Client(this, mev->window);
+		registerClient(client);
 	}
-	base->map();
+	client->map();
 }
 
 void
 WindowManager::destroyNotify(XEvent * ev)
 {
     XDestroyWindowEvent * dev;
-	BaseWindow * base;
+	Client * client;
 
     dev = &ev->xdestroywindow;
 
@@ -40,10 +46,10 @@ WindowManager::destroyNotify(XEvent * ev)
     printf("\twindow: %ld\n", dev->window);
     printf("\tevent: %ld\n", dev->event);
 	
-	base = windowToBaseWindow(dev->window);
-	if (base) {
-		unregisterBaseWindow(base);
-		delete base;
+	client = windowToClient(dev->window);
+	if (client) {
+		unregisterClient(client);
+		delete client;
 	}
 }
 
@@ -51,7 +57,7 @@ void
 WindowManager::configureNotify(XEvent * ev)
 {
     XConfigureEvent * cev;
-	BaseWindow * base;
+	Client * client;
 
 	unsigned long attrmask;
 	XWindowChanges wc;
@@ -78,7 +84,7 @@ void
 WindowManager::configureRequest(XEvent * ev)
 {
     XConfigureRequestEvent * cev;
-	BaseWindow * base;
+	Client * client;
 
 	unsigned long attrmask;
 	XWindowChanges wc;
@@ -99,15 +105,15 @@ WindowManager::configureRequest(XEvent * ev)
     printf("\tsendevent %s\n", (cev->send_event) ?
             "true" : "false");
 
-	attrmask = CWX | CWY | CWWidth | CWHeight;
+	attrmask = cev->value_mask & (CWX | CWY | CWWidth | CWHeight);
 	wc.x = cev->x;
 	wc.y = cev->y;
 	wc.width = cev->width;
 	wc.height = cev->height;
 
-	base = windowToBaseWindow(cev->window);
-	if (base) {
-		base->configure(attrmask, &wc);
+	client = windowToClient(cev->window);
+	if (client) {
+		client->configure(attrmask, &wc);
 	} else {
 		XConfigureWindow(display, cev->window, attrmask, &wc);
 	}
