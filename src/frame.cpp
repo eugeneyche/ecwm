@@ -3,7 +3,9 @@
 #include "frame.h"
 #include "client.h"
 
-#define BORDER_WIDTH 2
+#define BORDER_WIDTH 1
+#define BORDER_HEIGHT 20
+
 
 Frame::Frame(WindowManager * wm, Client * client) :
 		BaseWindow (wm, None), client (client)
@@ -50,8 +52,8 @@ Frame::fitClient()
 
     attrmask |= CWBorderWidth;
 
-    wc.x = 5;
-    wc.y = 35;
+    wc.x = 0;
+    wc.y = BORDER_HEIGHT;
     wc.width = clientArea.width;
     wc.height = clientArea.height;
     wc.border_width = 0;
@@ -81,8 +83,8 @@ Frame::frameAreaToClientArea(Rectangle frameArea)
 
     frameArea.x = clientArea.x;
     frameArea.y = clientArea.y;
-    frameArea.width = clientArea.width - 10;
-    frameArea.height = clientArea.height - 40;
+    frameArea.width = clientArea.width;
+    frameArea.height = clientArea.height - BORDER_HEIGHT;
 
 	return clientArea;
 }
@@ -94,8 +96,8 @@ Frame::clientAreaToFrameArea(Rectangle clientArea)
 
     frameArea.x = clientArea.x;
     frameArea.y = clientArea.y;
-    frameArea.width = clientArea.width + 10;
-    frameArea.height = clientArea.height + 40;
+    frameArea.width = clientArea.width;
+    frameArea.height = clientArea.height + BORDER_HEIGHT;
 
 	return frameArea;
 }

@@ -17,12 +17,12 @@ void
 Client::map()
 {
     if (frame) {
-        frame->map();
         frame->fitClient();
+        frame->map();
     } else {
         reparent();
-        frame->map();
         frame->fitClient();
+        frame->map();
     }
     XMapWindow(wm->getDisplay(), window);
 }
